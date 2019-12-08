@@ -10,7 +10,7 @@ import cat.indiketa.degiro.http.DCommunication;
 import cat.indiketa.degiro.http.DCommunication.DResponse;
 import cat.indiketa.degiro.log.DLog;
 import cat.indiketa.degiro.model.DCashFunds;
-import cat.indiketa.degiro.model.DClient;
+import cat.indiketa.degiro.model.DClientData;
 import cat.indiketa.degiro.model.DConfig;
 import cat.indiketa.degiro.model.DLogin;
 import cat.indiketa.degiro.model.DOrders;
@@ -225,7 +225,8 @@ public class DeGiroImpl implements DeGiro {
             session.setConfig(gson.fromJson(getResponseData(response), DConfig.class));
 
             response = comm.getUrlData(session.getConfig().getPaUrl(), "client?sessionId=" + session.getJSessionId(), null);
-            session.setClient(gson.fromJson(getResponseData(response), DClient.class));
+            DClientData data = gson.fromJson(getResponseData(response), DClientData.class);
+            session.setClient(data.getData());
 
         } catch (IOException e) {
             throw new DeGiroException("IOException while retrieving user information", e);
