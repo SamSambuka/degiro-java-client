@@ -7,28 +7,7 @@ import cat.indiketa.degiro.exceptions.DeGiroException;
 import cat.indiketa.degiro.http.DCommunication;
 import cat.indiketa.degiro.http.DCommunication.DResponse;
 import cat.indiketa.degiro.log.DLog;
-import cat.indiketa.degiro.model.DCashFunds;
-import cat.indiketa.degiro.model.DClientData;
-import cat.indiketa.degiro.model.DConfig;
-import cat.indiketa.degiro.model.DLastTransactions;
-import cat.indiketa.degiro.model.DLogin;
-import cat.indiketa.degiro.model.DNewOrder;
-import cat.indiketa.degiro.model.DOrder;
-import cat.indiketa.degiro.model.DOrderAction;
-import cat.indiketa.degiro.model.DOrderConfirmation;
-import cat.indiketa.degiro.model.DOrderTime;
-import cat.indiketa.degiro.model.DOrderType;
-import cat.indiketa.degiro.model.DOrders;
-import cat.indiketa.degiro.model.DPlacedOrder;
-import cat.indiketa.degiro.model.DPortfolioProducts;
-import cat.indiketa.degiro.model.DPortfolioSummary;
-import cat.indiketa.degiro.model.DPrice;
-import cat.indiketa.degiro.model.DPriceHistory;
-import cat.indiketa.degiro.model.DPriceListener;
-import cat.indiketa.degiro.model.DProductDescriptions;
-import cat.indiketa.degiro.model.DProductSearch;
-import cat.indiketa.degiro.model.DProductType;
-import cat.indiketa.degiro.model.DTransactions;
+import cat.indiketa.degiro.model.*;
 import cat.indiketa.degiro.model.raw.DRawCashFunds;
 import cat.indiketa.degiro.model.raw.DRawOrders;
 import cat.indiketa.degiro.model.raw.DRawPortfolio;
@@ -416,7 +395,7 @@ public class DeGiroImpl implements DeGiro {
         ensureLogged();
         try {
             DResponse response = comm.getUrlData(session.getConfig().getTradingUrl(), "v5/checkOrder;jsessionid=" + session.getJSessionId() + "?intAccount=" + session.getClient().getIntAccount() + "&sessionId=" + session.getJSessionId(), orderToMap(order));
-            orderConfirmation = gson.fromJson(getResponseData(response), DOrderConfirmation.class);
+            orderConfirmation = gson.fromJson(getResponseData(response), DOrderConfirmationData.class).getData();
         } catch (IOException e) {
             throw new DeGiroException("IOException while checking order", e);
         }
@@ -483,7 +462,7 @@ public class DeGiroImpl implements DeGiro {
         try {
 
             Map<String, Object> degiroOrder = new HashMap<>();
-            degiroOrder.put("buysell", order.getBuysell().getValue());
+            degiroOrder.put("buySell", order.getBuysell().getValue());
             degiroOrder.put("orderType", order.getOrderType().getValue());
             degiroOrder.put("productId", order.getProductId());
             degiroOrder.put("size", order.getSize());
@@ -524,7 +503,7 @@ public class DeGiroImpl implements DeGiro {
 
     private Map orderToMap(DNewOrder order) {
         Map<String, Object> degiroOrder = new HashMap<>();
-        degiroOrder.put("buysell", order.getAction().getValue());
+        degiroOrder.put("buySell", order.getAction().getValue());
         degiroOrder.put("orderType", order.getOrderType().getValue());
         degiroOrder.put("productId", order.getProductId());
         degiroOrder.put("size", order.getSize());
