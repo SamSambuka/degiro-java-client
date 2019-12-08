@@ -41,7 +41,7 @@ public class DTransactions {
         private long id;
         private long productId;
         private String date;
-        private DOrderAction buysell;
+        private DOrderAction buySell;
         private double price;
         private long quantity;
         private double total;
@@ -70,12 +70,12 @@ public class DTransactions {
             this.date = date;
         }
 
-        public DOrderAction getBuysell() {
-            return buysell;
+        public DOrderAction getBuySell() {
+            return buySell;
         }
 
-        public void setBuysell(DOrderAction buysell) {
-            this.buysell = buysell;
+        public void setBuySell(DOrderAction buySell) {
+            this.buySell = buySell;
         }
 
         public double getPrice() {

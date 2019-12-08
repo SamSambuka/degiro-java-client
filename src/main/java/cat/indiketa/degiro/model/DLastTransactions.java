@@ -29,7 +29,7 @@ public class DLastTransactions {
         private int contractType;
         private int contractSize;
         private String currency;
-        private DOrderAction buysell;
+        private DOrderAction buySell;
         private long size;
         private long quantity;
         private BigDecimal price;
@@ -96,12 +96,12 @@ public class DLastTransactions {
             this.currency = currency;
         }
 
-        public DOrderAction getBuysell() {
-            return buysell;
+        public DOrderAction getBuySell() {
+            return buySell;
         }
 
-        public void setBuysell(DOrderAction buysell) {
-            this.buysell = buysell;
+        public void setBuySell(DOrderAction buySell) {
+            this.buySell = buySell;
         }
 
         public long getSize() {

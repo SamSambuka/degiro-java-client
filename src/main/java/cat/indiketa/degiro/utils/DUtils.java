@@ -276,9 +276,9 @@ public class DUtils {
                         String stringValue = (String) value.getValue();
                         DOrder.class.getMethod(methodName, String.class).invoke(order, stringValue);
                         break;
-                    case "buySell":
+                    case "buysell":
                         String stringValue2 = (String) value.getValue();
-                        order.setBuysell(DOrderAction.getOrderByValue(stringValue2));
+                        order.setBuySell(DOrderAction.getOrderByValue(stringValue2));
                         break;
 
                     case "date":
@@ -392,7 +392,7 @@ public class DUtils {
                         break;
                     case "buySell":
                         String stringValue2 = (String) value.getValue();
-                        transaction.setBuysell(DOrderAction.getOrderByValue(stringValue2));
+                        transaction.setBuySell(DOrderAction.getOrderByValue(stringValue2));
                         break;
 
                     case "date":

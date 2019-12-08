@@ -462,7 +462,7 @@ public class DeGiroImpl implements DeGiro {
         try {
 
             Map<String, Object> degiroOrder = new HashMap<>();
-            degiroOrder.put("buySell", order.getBuysell().getValue());
+            degiroOrder.put("buySell", order.getBuySell().getValue());
             degiroOrder.put("orderType", order.getOrderType().getValue());
             degiroOrder.put("productId", order.getProductId());
             degiroOrder.put("size", order.getSize());
