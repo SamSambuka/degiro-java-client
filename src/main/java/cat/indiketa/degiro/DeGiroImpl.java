@@ -1,35 +1,33 @@
 package cat.indiketa.degiro;
 
-import cat.indiketa.degiro.utils.DUtils;
-import cat.indiketa.degiro.utils.DCredentials;
-import cat.indiketa.degiro.session.DSession;
+
+import cat.indiketa.degiro.exceptions.DInvalidCredentialsException;
 import cat.indiketa.degiro.exceptions.DUnauthorizedException;
 import cat.indiketa.degiro.exceptions.DeGiroException;
-import cat.indiketa.degiro.exceptions.DInvalidCredentialsException;
 import cat.indiketa.degiro.http.DCommunication;
 import cat.indiketa.degiro.http.DCommunication.DResponse;
 import cat.indiketa.degiro.log.DLog;
 import cat.indiketa.degiro.model.DCashFunds;
 import cat.indiketa.degiro.model.DClientData;
 import cat.indiketa.degiro.model.DConfig;
-import cat.indiketa.degiro.model.DLogin;
-import cat.indiketa.degiro.model.DOrders;
-import cat.indiketa.degiro.model.DPortfolioProducts;
 import cat.indiketa.degiro.model.DLastTransactions;
+import cat.indiketa.degiro.model.DLogin;
 import cat.indiketa.degiro.model.DNewOrder;
 import cat.indiketa.degiro.model.DOrder;
 import cat.indiketa.degiro.model.DOrderAction;
 import cat.indiketa.degiro.model.DOrderConfirmation;
 import cat.indiketa.degiro.model.DOrderTime;
 import cat.indiketa.degiro.model.DOrderType;
+import cat.indiketa.degiro.model.DOrders;
 import cat.indiketa.degiro.model.DPlacedOrder;
+import cat.indiketa.degiro.model.DPortfolioProducts;
 import cat.indiketa.degiro.model.DPortfolioSummary;
 import cat.indiketa.degiro.model.DPrice;
 import cat.indiketa.degiro.model.DPriceHistory;
 import cat.indiketa.degiro.model.DPriceListener;
+import cat.indiketa.degiro.model.DProductDescriptions;
 import cat.indiketa.degiro.model.DProductSearch;
 import cat.indiketa.degiro.model.DProductType;
-import cat.indiketa.degiro.model.DProductDescriptions;
 import cat.indiketa.degiro.model.DTransactions;
 import cat.indiketa.degiro.model.raw.DRawCashFunds;
 import cat.indiketa.degiro.model.raw.DRawOrders;
@@ -37,11 +35,17 @@ import cat.indiketa.degiro.model.raw.DRawPortfolio;
 import cat.indiketa.degiro.model.raw.DRawPortfolioSummary;
 import cat.indiketa.degiro.model.raw.DRawTransactions;
 import cat.indiketa.degiro.model.raw.DRawVwdPrice;
+import cat.indiketa.degiro.session.DSession;
+import cat.indiketa.degiro.utils.DCredentials;
+import cat.indiketa.degiro.utils.DUtils;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -55,8 +59,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
 
 /**
  *
@@ -225,8 +227,7 @@ public class DeGiroImpl implements DeGiro {
             session.setConfig(gson.fromJson(getResponseData(response), DConfig.class));
 
             response = comm.getUrlData(session.getConfig().getPaUrl(), "client?sessionId=" + session.getJSessionId(), null);
-            DClientData data = gson.fromJson(getResponseData(response), DClientData.class);
-            session.setClient(data.getData());
+            session.setClient(gson.fromJson(getResponseData(response), DClientData.class).getData());
 
         } catch (IOException e) {
             throw new DeGiroException("IOException while retrieving user information", e);
@@ -251,7 +252,7 @@ public class DeGiroImpl implements DeGiro {
         try {
             List<Header> headers = new ArrayList<>(1);
             headers.add(new BasicHeader("Origin", session.getConfig().getTradingUrl()));
-            HashMap<String, String> data = new HashMap();
+            HashMap<String, String> data = new HashMap<>();
             data.put("referrer", "https://trader.degiro.nl");
             DResponse response = comm.getUrlData("https://degiro.quotecast.vwdservices.com/CORS", "/request_session?version=1.0.20170315&userToken=" + session.getClient().getId(), data, headers);
             HashMap map = gson.fromJson(getResponseData(response), HashMap.class);
@@ -321,7 +322,7 @@ public class DeGiroImpl implements DeGiro {
         List<Header> headers = new ArrayList<>(1);
         headers.add(new BasicHeader("Origin", session.getConfig().getTradingUrl()));
 
-        HashMap<String, String> data = new HashMap();
+        HashMap<String, String> data = new HashMap<>();
         data.put("controlData", generatePriceRequestPayload());
 
         DResponse response = comm.getUrlData("https://degiro.quotecast.vwdservices.com/CORS", "/" + session.getVwdSession(), data, headers);
@@ -332,44 +333,14 @@ public class DeGiroImpl implements DeGiro {
 
     private String generatePriceRequestPayload() {
 
-        String requestedIssues = "";
-        for (String issueId : subscribedVwdIssues.keySet()) {
-            Long last = subscribedVwdIssues.get(issueId);
+        StringBuilder requestedIssues = new StringBuilder();
+        for (Map.Entry<String, Long> entry : subscribedVwdIssues.entrySet()) {
+            Long last = subscribedVwdIssues.get(entry.getKey());
             if (last == null || last > pollingInterval) {
-                requestedIssues += "req(X.BidPrice);req(X.AskPrice);req(X.LastPrice);req(X.LastTime);".replace("X", issueId + "");
+                requestedIssues.append("req(X.BidPrice);req(X.AskPrice);req(X.LastPrice);req(X.LastTime);".replace("X", entry.getKey() + ""));
             }
         }
-        return requestedIssues;
-
-    }
-
-    private void checkPriceChanges() throws DeGiroException {
-        ensureVwdSession();
-
-        try {
-            requestPriceUpdate();
-            List<Header> headers = new ArrayList<>(1);
-            headers.add(new BasicHeader("Origin", session.getConfig().getTradingUrl()));
-
-            DResponse response = comm.getUrlData("https://degiro.quotecast.vwdservices.com/CORS", "/" + session.getVwdSession(), null, headers);
-            List<DRawVwdPrice> data = gson.fromJson(getResponseData(response), rawPriceData);
-
-            List<DPrice> prices = DUtils.convert(data);
-
-            if (priceListener != null) {
-                for (DPrice price : prices) {
-                    priceListener.priceChanged(price);
-                }
-            }
-
-        } catch (IOException e) {
-            throw new DeGiroException("IOException while subscribing to issues", e);
-        }
-
-        if (pricePoller == null) {
-            pricePoller = new Timer("Prices", true);
-            pricePoller.scheduleAtFixedRate(new DPriceTimerTask(), 0, pollingInterval);
-        }
+        return requestedIssues.toString();
     }
 
     @Override
@@ -511,7 +482,7 @@ public class DeGiroImpl implements DeGiro {
         ensureLogged();
         try {
 
-            Map degiroOrder = new HashMap();
+            Map<String, Object> degiroOrder = new HashMap<>();
             degiroOrder.put("buysell", order.getBuysell().getValue());
             degiroOrder.put("orderType", order.getOrderType().getValue());
             degiroOrder.put("productId", order.getProductId());
@@ -552,7 +523,7 @@ public class DeGiroImpl implements DeGiro {
     }
 
     private Map orderToMap(DNewOrder order) {
-        Map degiroOrder = new HashMap();
+        Map<String, Object> degiroOrder = new HashMap<>();
         degiroOrder.put("buysell", order.getAction().getValue());
         degiroOrder.put("orderType", order.getOrderType().getValue());
         degiroOrder.put("productId", order.getProductId());
@@ -606,9 +577,38 @@ public class DeGiroImpl implements DeGiro {
         @Override
         public void run() {
             try {
-                DeGiroImpl.this.checkPriceChanges();
+                checkPriceChanges();
             } catch (Exception e) {
                 DLog.DEGIRO.error("Exception while updating prices", e);
+            }
+        }
+
+        private void checkPriceChanges() throws DeGiroException {
+            ensureVwdSession();
+
+            try {
+                requestPriceUpdate();
+                List<Header> headers = new ArrayList<>(1);
+                headers.add(new BasicHeader("Origin", session.getConfig().getTradingUrl()));
+
+                DResponse response = comm.getUrlData("https://degiro.quotecast.vwdservices.com/CORS", "/" + session.getVwdSession(), null, headers);
+                List<DRawVwdPrice> data = gson.fromJson(getResponseData(response), rawPriceData);
+
+                List<DPrice> prices = DUtils.convert(data);
+
+                if (priceListener != null) {
+                    for (DPrice price : prices) {
+                        priceListener.priceChanged(price);
+                    }
+                }
+
+            } catch (IOException e) {
+                throw new DeGiroException("IOException while subscribing to issues", e);
+            }
+
+            if (pricePoller == null) {
+                pricePoller = new Timer("Prices", true);
+                pricePoller.scheduleAtFixedRate(new DPriceTimerTask(), 0, pollingInterval);
             }
         }
 

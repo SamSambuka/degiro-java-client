@@ -8,8 +8,13 @@ import java.io.File;
  */
 public class Main {
 
+    /**
+     * Pass in a properties file with username and password keys
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
-        DEngine e = new DEngine(new Credentials(new File("/home/ecatala/dg.properties")));
+        DEngine e = new DEngine(new Credentials(new File(args[0])));
 
         e.startEngine();
     }

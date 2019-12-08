@@ -138,7 +138,6 @@ public class DUtils {
                 String methodName = "set" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, value.getName());
 
                 switch (value.getName()) {
-                    case "id":
                     case "size":
                     case "contractSize":
                         long longValue = Double.valueOf(value.getValue().toString()).longValue();
@@ -162,7 +161,7 @@ public class DUtils {
                     case "change":
                     case "value":
                     case "closePrice":
-                        BigDecimal bdValue = new BigDecimal((double) value.getValue());
+                        BigDecimal bdValue = BigDecimal.valueOf((double)value.getValue());
                         if (!value.getName().equals("change") && bdValue.scale() > 4) {
                             bdValue = bdValue.setScale(4, RoundingMode.HALF_UP);
                         }

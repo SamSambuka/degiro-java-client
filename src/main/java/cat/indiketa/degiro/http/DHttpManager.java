@@ -1,11 +1,7 @@
 package cat.indiketa.degiro.http;
 
-import cat.indiketa.degiro.session.DSession;
 import cat.indiketa.degiro.log.DLog;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
+import cat.indiketa.degiro.session.DSession;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpResponse;
@@ -23,7 +19,6 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -31,6 +26,11 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContextBuilder;
+
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -59,7 +59,7 @@ public class DHttpManager {
             contextSSL.loadTrustMaterial(null, new TrustSelfSignedStrategy());
             sslSocketFactory = new SSLConnectionSocketFactory(contextSSL.build(), new DefaultHostnameVerifier());
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-            DLog.HTTP.fatal("Exception creating SSL socket factory", e);
+            DLog.HTTP.error("Exception creating SSL socket factory", e);
         }
 
         Registry<ConnectionSocketFactory> tipusConnexions = RegistryBuilder.<ConnectionSocketFactory>create()

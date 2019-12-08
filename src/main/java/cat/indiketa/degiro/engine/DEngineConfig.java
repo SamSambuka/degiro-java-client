@@ -9,7 +9,7 @@ import java.io.File;
 public class DEngineConfig {
 
     public File getDataDirectory() {
-        return new File("/home/ecatala/degiro");
+        return new File(System.getenv().get("DEGIRO_DATA_DIRECTORY"));
     }
 
     public int getProductPriceHistoryCount() {

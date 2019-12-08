@@ -152,8 +152,10 @@ public class Product {
         todayBase = prod.getTodayPlBase();
         totalBase = prod.getPlBase();
 
-        result = prod.getPlBase().add(value);
-        todayResult = prod.getTodayPlBase().add(value);
+        if(value != null) {
+            result = prod.getPlBase().add(value);
+            todayResult = prod.getTodayPlBase().add(value);
+        }
 
         if (previousHash != hashCode()) {
             publish();
