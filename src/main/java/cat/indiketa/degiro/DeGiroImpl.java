@@ -203,7 +203,7 @@ public class DeGiroImpl implements DeGiro {
             }
 
             response = comm.getUrlData(BASE_TRADER_URL, "/login/secure/config", null);
-            session.setConfig(gson.fromJson(getResponseData(response), DConfig.class));
+            session.setConfig(gson.fromJson(getResponseData(response), DConfigData.class).getData());
 
             response = comm.getUrlData(session.getConfig().getPaUrl(), "client?sessionId=" + session.getJSessionId(), null);
             session.setClient(gson.fromJson(getResponseData(response), DClientData.class).getData());
@@ -532,7 +532,7 @@ public class DeGiroImpl implements DeGiro {
         if (response.getStatus() == 200 || response.getStatus() == 201) {
             data = response.getText();
         } else {
-            throw new DeGiroException("Unexpected HTTP Status " + response.getStatus() + ": " + response.getMethod() + " " + response.getUrl());
+            throw new DeGiroException(response.getText() + " Unexpected HTTP Status " + response.getStatus() + ": " + response.getMethod() + " " + response.getUrl());
         }
 
         return data;

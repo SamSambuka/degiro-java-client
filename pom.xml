@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     <name>Unofficial DeGiro Api</name>
     <description>The DeGiro java api client makes it easier to automate DeGiro stock broker actions.</description>
-    <url>https://github.com/indiketa/degiro-java-client</url>
+    <url>https://github.com/Endrew/degiro-java-client</url>
 
     <licenses>
         <license>
@@ -84,6 +84,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <mainClass>cat.indiketa.degiro.engine.Main</mainClass>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
             </plugin>
         </plugins>
     </build>
