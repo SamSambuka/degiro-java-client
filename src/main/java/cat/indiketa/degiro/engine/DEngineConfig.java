@@ -3,13 +3,12 @@ package cat.indiketa.degiro.engine;
 import java.io.File;
 
 /**
- *
  * @author indiketa
  */
 public class DEngineConfig {
 
     public File getDataDirectory() {
-        return new File(System.getenv().get("DEGIRO_DATA_DIRECTORY"));
+        return new File((String) System.getenv().get("DEGIRO_DATA_DIRECTORY"));
     }
 
     public int getProductPriceHistoryCount() {

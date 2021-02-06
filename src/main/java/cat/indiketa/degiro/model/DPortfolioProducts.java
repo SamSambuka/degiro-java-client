@@ -51,6 +51,12 @@ public class DPortfolioProducts {
         protected BigDecimal closePrice;
         protected BigDecimal plBase;
         protected BigDecimal todayPlBase;
+        protected BigDecimal breakEvenPrice;
+        protected BigDecimal averageFxRate;
+        protected BigDecimal realizedProductPl;
+        protected BigDecimal realizedFxPl;
+        protected BigDecimal todayRealizedProductPl;
+        protected BigDecimal todayRealizedFxPl;
 
         public long getId() {
             return id;
@@ -205,6 +211,54 @@ public class DPortfolioProducts {
 
         public void setRealValue(BigDecimal realValue) {
             this.realValue = realValue;
+        }
+
+        public BigDecimal getBreakEvenPrice() {
+            return breakEvenPrice;
+        }
+
+        public void setBreakEvenPrice(BigDecimal breakEvenPrice) {
+            this.breakEvenPrice = breakEvenPrice;
+        }
+
+        public BigDecimal getAverageFxRate() {
+            return averageFxRate;
+        }
+
+        public void setAverageFxRate(BigDecimal averageFxRate) {
+            this.averageFxRate = averageFxRate;
+        }
+
+        public BigDecimal getRealizedProductPl() {
+            return realizedProductPl;
+        }
+
+        public void setRealizedProductPl(BigDecimal realizedProductPl) {
+            this.realizedProductPl = realizedProductPl;
+        }
+
+        public BigDecimal getRealizedFxPl() {
+            return realizedFxPl;
+        }
+
+        public void setRealizedFxPl(BigDecimal realizedFxPl) {
+            this.realizedFxPl = realizedFxPl;
+        }
+
+        public BigDecimal getTodayRealizedProductPl() {
+            return todayRealizedProductPl;
+        }
+
+        public void setTodayRealizedProductPl(BigDecimal todayRealizedProductPl) {
+            this.todayRealizedProductPl = todayRealizedProductPl;
+        }
+
+        public BigDecimal getTodayRealizedFxPl() {
+            return todayRealizedFxPl;
+        }
+
+        public void setTodayRealizedFxPl(BigDecimal todayRealizedFxPl) {
+            this.todayRealizedFxPl = todayRealizedFxPl;
         }
 
         @Override

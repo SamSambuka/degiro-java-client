@@ -140,6 +140,7 @@ public class DUtils {
                 switch (value.getName()) {
                     case "size":
                     case "contractSize":
+                    case "id":
                         long longValue = Double.valueOf(value.getValue().toString()).longValue();
                         DPortfolioProduct.class.getMethod(methodName, long.class).invoke(productRow, longValue);
                         break;
@@ -161,6 +162,12 @@ public class DUtils {
                     case "change":
                     case "value":
                     case "closePrice":
+                    case "breakEvenPrice":
+                    case "averageFxRate":
+                    case "realizedProductPl":
+                    case "realizedFxPl":
+                    case "todayRealizedProductPl":
+                    case "todayRealizedFxPl":
                         BigDecimal bdValue = BigDecimal.valueOf((double)value.getValue());
                         if (!value.getName().equals("change") && bdValue.scale() > 4) {
                             bdValue = bdValue.setScale(4, RoundingMode.HALF_UP);

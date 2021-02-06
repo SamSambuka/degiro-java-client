@@ -86,7 +86,7 @@ public class DeGiroImpl implements DeGiro {
             DResponse response = comm.getData(session, "portfolio=" + portfolioLastUpdate, null);
             String data = getResponseData(response);
             DRawPortfolio rawPortfolio = gson.fromJson(data, DRawPortfolio.class);
-            portfolioLastUpdate = rawPortfolio.getPortfolio().getLastUpdated();
+//            portfolioLastUpdate = rawPortfolio.getPortfolio().getLastUpdated(); // TODO: check last update
             portfolio = DUtils.convert(rawPortfolio, currency);
         } catch (IOException e) {
             throw new DeGiroException("IOException while retrieving portfolio", e);

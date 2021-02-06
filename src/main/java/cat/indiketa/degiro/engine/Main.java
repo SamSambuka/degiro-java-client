@@ -1,5 +1,7 @@
 package cat.indiketa.degiro.engine;
 
+import cat.indiketa.degiro.utils.DCredentials;
+
 import java.io.File;
 
 /**
@@ -14,7 +16,7 @@ public class Main {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        DEngine e = new DEngine(new Credentials(new File(args[0])));
+        DEngine e = new DEngine(new Credentials(new File("C:/degiro/dg.properties")));
 
         e.startEngine();
     }
