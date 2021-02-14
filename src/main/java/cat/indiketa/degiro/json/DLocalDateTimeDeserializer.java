@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class DLocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
     @Override
@@ -26,7 +27,10 @@ public class DLocalDateTimeDeserializer implements JsonDeserializer<LocalDateTim
 
             In the case Degiro send the full date one should use OffsetDateTime instead of LocalDateTime
          */
-        if (date.contains(":")) {
+        if (date.contains("T")) {
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            parsed = LocalDateTime.parse(date, format);
+        } else if (date.contains(":")) {
             final String[] split = date.split(":");
             parsed = LocalDateTime.of(
                     LocalDate.now(),
