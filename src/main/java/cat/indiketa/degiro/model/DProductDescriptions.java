@@ -1,21 +1,20 @@
 package cat.indiketa.degiro.model;
 
+import lombok.Data;
+
 import java.util.Map;
 
 /**
  *
  * @author indiketa
  */
-public class DProductDescriptions  {
+@Data
+public class DProductDescriptions implements IValidable {
 
-    private Map<Long, DProductDescription> data;
+    private Map<String, DProductDescription> data;
 
-    public Map<Long, DProductDescription> getData() {
-        return data;
+    @Override
+    public boolean isInvalid() {
+        return data == null;
     }
-
-    public void setData(Map<Long, DProductDescription> data) {
-        this.data = data;
-    }
-
 }

@@ -1,107 +1,31 @@
 package cat.indiketa.degiro.model;
 
+import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author indiketa
  */
-public class DTransactions {
+@Data
+public class DTransactions implements IValidable {
 
-    private List<DTransaction> data = null;
+    private List<DTransaction> data = new ArrayList<>();
     private long status;
     private String statusText;
 
-    public List<DTransaction> getData() {
-        return data;
-    }
-
-    public void setData(List<DTransaction> data) {
-        this.data = data;
-    }
-
-    public long getStatus() {
-        return status;
-    }
-
-    public void setStatus(long status) {
-        this.status = status;
-    }
-
-    public String getStatusText() {
-        return statusText;
-    }
-
-    public void setStatusText(String statusText) {
-        this.statusText = statusText;
-    }
-
-    public static class DTransaction {
-
-        private long id;
-        private long productId;
-        private String date;
-        private DOrderAction buySell;
-        private double price;
-        private long quantity;
-        private double total;
-
-        public long getId() {
-            return id;
+    @Override
+    public boolean isInvalid() {
+        if (data == null) {
+            return true;
         }
-
-        public void setId(long id) {
-            this.id = id;
+        for (DTransaction datum : data) {
+            if (datum.isInvalid()) {
+                return true;
+            }
         }
-
-        public long getProductId() {
-            return productId;
-        }
-
-        public void setProductId(long productId) {
-            this.productId = productId;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
-
-        public DOrderAction getBuySell() {
-            return buySell;
-        }
-
-        public void setBuySell(DOrderAction buySell) {
-            this.buySell = buySell;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public long getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(long quantity) {
-            this.quantity = quantity;
-        }
-
-        public double getTotal() {
-            return total;
-        }
-
-        public void setTotal(double total) {
-            this.total = total;
-        }
-
+        return false;
     }
 
 }

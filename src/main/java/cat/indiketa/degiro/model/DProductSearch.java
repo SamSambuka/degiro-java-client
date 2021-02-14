@@ -5,31 +5,24 @@
  */
 package cat.indiketa.degiro.model;
 
+import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author indiketa
  */
-public class DProductSearch {
+@Data
+public class DProductSearch implements IValidable {
 
     private int offset;
-    private List<DProductDescription> products;
+    private List<DProductDescription> products = new ArrayList<>();
 
-    public int getOffset() {
-        return offset;
+    @Override
+    public boolean isInvalid() {
+        //no products field is present if no data is found
+        return false;
     }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    public List<DProductDescription> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<DProductDescription> products) {
-        this.products = products;
-    }
-
 }

@@ -3,8 +3,7 @@ package cat.indiketa.degiro.session;
 import cat.indiketa.degiro.DeGiro;
 import cat.indiketa.degiro.DeGiroImpl;
 import cat.indiketa.degiro.exceptions.DUnauthorizedException;
-import cat.indiketa.degiro.exceptions.DeGiroException;
-
+import cat.indiketa.degiro.log.DLog;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -44,7 +43,7 @@ public class DSessionExpiredRetryProxy implements InvocationHandler {
                 throw e.getTargetException();
             }
         } catch (IllegalAccessException | IllegalArgumentException e) {
-            throw new DeGiroException("Unexpected invocation exception: " + e.getMessage());
+            throw new RuntimeException("Unexpected invocation exception: " + e.getMessage());
         }
         return result;
     }

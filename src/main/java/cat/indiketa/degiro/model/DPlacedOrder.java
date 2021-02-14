@@ -1,37 +1,21 @@
 package cat.indiketa.degiro.model;
 
+import lombok.Data;
+
 /**
  *
  * @author indiketa
  */
-public class DPlacedOrder {
+@Data
+public class DPlacedOrder implements IValidable {
 
     private int status;
     private String statusText;
     private String orderId;
 
-    public int getStatus() {
-        return status;
+    @Override
+    public boolean isInvalid() {
+        //on creation orderId is filled but not on confirmation or change
+        return false;
     }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getStatusText() {
-        return statusText;
-    }
-
-    public void setStatusText(String statusText) {
-        this.statusText = statusText;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
 }

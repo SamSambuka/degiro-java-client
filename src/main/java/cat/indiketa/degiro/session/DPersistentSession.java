@@ -6,13 +6,14 @@ import cat.indiketa.degiro.model.DConfig;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.List;
-import org.apache.http.impl.cookie.BasicClientCookie;
 
 /**
  *
@@ -46,9 +47,7 @@ public class DPersistentSession extends DSession {
                     if (ds != null) {
                         config = ds.config;
                         client = ds.client;
-                        vwdSession = ds.vwdSession;
                         cookies = ds.cookies;
-                        lastVwdSessionUsed = ds.lastVwdSessionUsed;
                         DLog.DEGIRO.info("Permanent session storage loaded (" + file.length() + " bytes).");
                     }
                 }
@@ -82,8 +81,8 @@ public class DPersistentSession extends DSession {
     }
 
     @Override
-    public void setVwdSession(String vwdSession) {
-        super.setVwdSession(vwdSession);
+    public void clearSession() {
+        super.clearSession();
         saveSession();
     }
 
@@ -98,12 +97,4 @@ public class DPersistentSession extends DSession {
         super.setConfig(config);
         saveSession();
     }
-
-    @Override
-    public void setLastVwdSessionUsed(long lastVwdSessionUsed) {
-        super.setLastVwdSessionUsed(lastVwdSessionUsed);
-        saveSession();
-    }
-
-    
 }

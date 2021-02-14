@@ -5,167 +5,72 @@
  */
 package cat.indiketa.degiro.model;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 /**
- *
  * @author indiketa
  */
-public class DOrder {
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class DOrder implements DCopyable<DOrder> {
 
     private String id;
-    private Calendar date;
+    private LocalDateTime date;
     private long productId;
     private String product;
     private int contractType;
     private int contractSize;
     private String currency;
-    private DOrderAction buySell;
+    private DOrderAction buysell;
     private long size;
     private long quantity;
     private BigDecimal price;
     private BigDecimal stopPrice;
     private BigDecimal totalOrderValue;
     private DOrderType orderType;
-    private DOrderTime orderTime;
+    private DOrderTime orderTimeType;
     private boolean isModifiable;
     private boolean isDeletable;
 
-    public String getId() {
-        return id;
+    //delta sync may receive same information in two distinct field... :/
+    public void setOrderTypeId(DOrderType type) {
+        this.orderType = type;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    //delta sync may receive same information in two distinct field... :/
+    public void setOrderTimeTypeId(DOrderTime type) {
+        this.orderTimeType = type;
     }
 
-    public Calendar getDate() {
-        return date;
+    @Override
+    public DOrder copy() {
+        return new DOrder(id, date, productId, product, contractType, contractSize, currency, buysell, size, quantity, price, stopPrice, totalOrderValue, orderType, orderTimeType, isModifiable, isDeletable);
     }
 
-    public void setDate(Calendar date) {
-        this.date = date;
+    public boolean isActive() {
+        return size > 0;
     }
 
-    public long getProductId() {
-        return productId;
+    /**
+     * Setter used by reflection by {@link cat.indiketa.degiro.json.DUpdatesDeserializer#deserialize(JsonElement, Type, JsonDeserializationContext)}
+     */
+    public void setIsModifiable(boolean modifiable) {
+        isModifiable = modifiable;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    /**
+     * Setter used by reflection by {@link cat.indiketa.degiro.json.DUpdatesDeserializer#deserialize(JsonElement, Type, JsonDeserializationContext)}
+     */
+    public void setIsDeletable(boolean deletable) {
+        isDeletable = deletable;
     }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
-    public int getContractType() {
-        return contractType;
-    }
-
-    public void setContractType(int contractType) {
-        this.contractType = contractType;
-    }
-
-    public int getContractSize() {
-        return contractSize;
-    }
-
-    public void setContractSize(int contractSize) {
-        this.contractSize = contractSize;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public DOrderAction getBuySell() {
-        return buySell;
-    }
-
-    public void setBuySell(DOrderAction buySell) {
-        this.buySell = buySell;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(long quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public BigDecimal getStopPrice() {
-        return stopPrice;
-    }
-
-    public void setStopPrice(BigDecimal stopPrice) {
-        this.stopPrice = stopPrice;
-    }
-
-    public BigDecimal getTotalOrderValue() {
-        return totalOrderValue;
-    }
-
-    public void setTotalOrderValue(BigDecimal totalOrderValue) {
-        this.totalOrderValue = totalOrderValue;
-    }
-
-    public DOrderType getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(DOrderType orderType) {
-        this.orderType = orderType;
-    }
-
-    public DOrderTime getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(DOrderTime orderTime) {
-        this.orderTime = orderTime;
-    }
-
-    public boolean isIsModifiable() {
-        return isModifiable;
-    }
-
-    public void setIsModifiable(boolean isModifiable) {
-        this.isModifiable = isModifiable;
-    }
-
-    public boolean isIsDeletable() {
-        return isDeletable;
-    }
-
-    public void setIsDeletable(boolean isDeletable) {
-        this.isDeletable = isDeletable;
-    }
-
 }

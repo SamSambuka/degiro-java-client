@@ -1,8 +1,8 @@
 package cat.indiketa.degiro.log;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  *
@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 public enum DLog {
 
     DEGIRO,
-    ENGINE,
     HTTP;
 
     private final Logger logger;
@@ -47,7 +46,7 @@ public enum DLog {
     public void warn(String message, Throwable t) {
         logger.warn(message, t);
     }
-
+    
     public void info(String message) {
         logger.info(message);
     }
@@ -58,6 +57,18 @@ public enum DLog {
 
     public boolean isWarnEnabled() {
         return logger.isWarnEnabled();
+    }
+
+    public void fatal(String message) {
+        logger.error(message);
+    }
+
+    public void fatal(String message, Throwable t) {
+        logger.error(message, t);
+    }
+
+    public boolean isFatalEnabled() {
+        return logger.isErrorEnabled();
     }
 
     public boolean isInfoEnabled() {
