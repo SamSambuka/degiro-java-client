@@ -17,7 +17,7 @@ public class DOrderConfirmation implements IValidable {
 
     @Override
     public boolean isInvalid() {
-        return confirmationId == null || transactionFees == null || transactionFees.isEmpty();
+        return confirmationId == null && (transactionFees == null || transactionFees.isEmpty());
     }
 
     @Data

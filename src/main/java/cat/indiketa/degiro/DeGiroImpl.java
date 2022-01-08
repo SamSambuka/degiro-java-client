@@ -103,7 +103,9 @@ public class DeGiroImpl implements DeGiro {
             final List<DUpdateToken> tokens1 = new ArrayList<>(tokens == null ? DUpdateToken.allSections() : tokens);
             //ensure request has always same format/order better for proxy/cache hit
             tokens1.sort(Comparator.comparingInt(o -> o.getSection().ordinal()));
-            DResponse response = getUpdateData(tokens1.stream().map(DUpdateToken::encode).collect(Collectors.joining("&")), null);
+            DResponse response = getUpdateData(
+                    tokens1.stream().map(DUpdateToken::encode).collect(Collectors.joining("&")), null
+            );
             String data = getResponseData(response);
             update = gson.fromJson(data, DUpdates.class);
         } catch (IOException e) {
@@ -419,14 +421,15 @@ public class DeGiroImpl implements DeGiro {
     }
 
     @Override
-    public List<Long> getFavorites() throws DeGiroException {
+    public DFavorites getFavorites() throws DeGiroException {
         ensureLogged();
         return httpGet(
                 DFavorites.class,
                 session.getConfig().getPaUrl(),
-                "favourites?intAccount=" + session.getClient().getIntAccount() + "&sessionId=" + session.getJSessionId(),
-                gson::fromJsonData
+                "favourites/lists?intAccount=" + session.getClient().getIntAccount() + "&sessionId=" + session.getJSessionId(),
+                gson::fromJson
         );
+
     }
 
     @Override

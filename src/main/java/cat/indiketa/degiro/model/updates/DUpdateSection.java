@@ -7,5 +7,6 @@ public enum DUpdateSection {
     historicalOrders,
     transactions,
     alerts,
-    cashFunds;
+    cashFunds,
+    favourites;
 }

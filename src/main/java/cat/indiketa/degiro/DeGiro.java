@@ -1,21 +1,7 @@
 package cat.indiketa.degiro;
 
 import cat.indiketa.degiro.exceptions.DeGiroException;
-import cat.indiketa.degiro.model.DAccountInfo;
-import cat.indiketa.degiro.model.DCashMovement;
-import cat.indiketa.degiro.model.DClient;
-import cat.indiketa.degiro.model.DConfigDictionary;
-import cat.indiketa.degiro.model.DNewOrder;
-import cat.indiketa.degiro.model.DOrder;
-import cat.indiketa.degiro.model.DOrderConfirmation;
-import cat.indiketa.degiro.model.DOrderHistoryRecord;
-import cat.indiketa.degiro.model.DPlacedOrder;
-import cat.indiketa.degiro.model.DPrice;
-import cat.indiketa.degiro.model.DPriceHistory;
-import cat.indiketa.degiro.model.DProductDescriptions;
-import cat.indiketa.degiro.model.DProductSearch;
-import cat.indiketa.degiro.model.DProductType;
-import cat.indiketa.degiro.model.DTransaction;
+import cat.indiketa.degiro.model.*;
 import cat.indiketa.degiro.model.updates.DUpdateSection;
 import cat.indiketa.degiro.model.updates.DUpdateToken;
 import cat.indiketa.degiro.model.updates.DUpdates;
@@ -76,7 +62,7 @@ public interface DeGiro {
 
     DPriceHistory getPriceHistory(Long issueId) throws DeGiroException;
 
-    List<Long> getFavorites() throws DeGiroException;
+    DFavorites getFavorites() throws DeGiroException;
 
     void addFavorite(long productId) throws DeGiroException;
 

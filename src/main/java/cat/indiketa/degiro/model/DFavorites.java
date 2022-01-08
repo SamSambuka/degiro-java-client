@@ -1,11 +1,26 @@
 package cat.indiketa.degiro.model;
 
-import java.util.ArrayList;
+import lombok.Data;
 
-public class DFavorites extends ArrayList<Long> implements IValidable {
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+public class DFavorites implements IValidable {
+
+    private List<DFavorite> data = new ArrayList<>();
 
     @Override
     public boolean isInvalid() {
-        return true;
+        if (data == null) {
+            return true;
+        }
+        for (DFavorite datum : data) {
+            if (datum.isInvalid()) {
+                return true;
+            }
+        }
+        return false;
     }
+
 }

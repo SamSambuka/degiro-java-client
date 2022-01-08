@@ -1,12 +1,6 @@
 package cat.indiketa.degiro.model.updates;
 
-import cat.indiketa.degiro.model.DAlert;
-import cat.indiketa.degiro.model.DCashFund;
-import cat.indiketa.degiro.model.DHistoricalOrder;
-import cat.indiketa.degiro.model.DLastTransaction;
-import cat.indiketa.degiro.model.DOrder;
-import cat.indiketa.degiro.model.DPortfolioProduct;
-import cat.indiketa.degiro.model.DPortfolioSummary;
+import cat.indiketa.degiro.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -48,6 +42,8 @@ public class DUpdates {
      * On first update request with token == 0 is empty
      */
     DLastUpdate<List<DUpdate<DLastTransaction>>> transactions;
+
+    DLastUpdate<List<DUpdate<DFavourites>>> favourites;
 
 }
 

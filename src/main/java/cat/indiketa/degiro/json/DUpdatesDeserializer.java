@@ -1,14 +1,7 @@
 package cat.indiketa.degiro.json;
 
 import cat.indiketa.degiro.log.DLog;
-import cat.indiketa.degiro.model.DAlert;
-import cat.indiketa.degiro.model.DCashFund;
-import cat.indiketa.degiro.model.DCopyable;
-import cat.indiketa.degiro.model.DHistoricalOrder;
-import cat.indiketa.degiro.model.DLastTransaction;
-import cat.indiketa.degiro.model.DOrder;
-import cat.indiketa.degiro.model.DPortfolioProduct;
-import cat.indiketa.degiro.model.DPortfolioSummary;
+import cat.indiketa.degiro.model.*;
 import cat.indiketa.degiro.model.updates.DLastUpdate;
 import cat.indiketa.degiro.model.updates.DUpdate;
 import cat.indiketa.degiro.model.updates.DUpdateSection;
@@ -98,6 +91,11 @@ public class DUpdatesDeserializer implements JsonDeserializer<DUpdates> {
                 DUpdateSection.transactions,
                 d -> decodeTable(d, DLastTransaction.class, DLastTransaction::new, context)
         );
+        DLastUpdate<List<DUpdate<DFavourites>>> favourites = decodeUpdate(
+                updates,
+                DUpdateSection.favourites,
+                d -> decodeTable(d, DFavourites.class, DFavourites::new, context)
+        );
         return new DUpdates(
                 tokens,
                 decodeOrders,
@@ -106,7 +104,8 @@ public class DUpdatesDeserializer implements JsonDeserializer<DUpdates> {
                 totalPortfolio,
                 alerts,
                 cashFunds,
-                transactions
+                transactions,
+                favourites
         );
     }
 
