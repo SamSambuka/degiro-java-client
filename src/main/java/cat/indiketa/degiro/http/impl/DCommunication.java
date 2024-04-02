@@ -82,6 +82,9 @@ public class DCommunication implements IDCommunication {
             ((HttpEntityEnclosingRequestBase) request).setEntity(new StringEntity(jsonData));
         }
 
+        request.addHeader("User-Agent", "PostmanRuntime/7.37.0");
+        request.setHeader("User-Agent", "PostmanRuntime/7.37.0");
+
         request.setURI(URI.create(url));
 
         if (headers != null) {
